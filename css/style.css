@@ -61,15 +61,11 @@ button, input, textarea { font: inherit; color: inherit; }
 
 /* ── Hero ── */
 .hero { position: relative; height: 100svh; min-height: 560px; max-height: 1000px; color: #fff; overflow: hidden; background: #2a2a2a; }
-.hero__slides { position: absolute; inset: 0; }
-.hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; background: #2a2a2a; align-items: flex-end; padding-bottom: 90px; }
-.hero__slide.is-on { opacity: 1; }
+.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.55); }
 .hero__text { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: var(--header-h) var(--gutter) 40px; }
 .hero__sub { font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.85); margin-bottom: 28px; }
 .hero__title { font-size: 32px; line-height: 1.3; font-weight: 800; letter-spacing: -0.02em; }
-.hero__dots { position: absolute; z-index: 2; left: 50%; bottom: 130px; transform: translateX(-50%); display: flex; gap: 8px; }
-.hero__dots button { width: 10px; height: 6px; border: 0; border-radius: 3px; background: #777; cursor: pointer; transition: width .3s, background .3s; }
-.hero__dots button.is-on { width: 40px; background: var(--gold); }
 
 /* ── Section commons ── */
 .sec { padding: 80px 0; }
@@ -278,7 +274,6 @@ button, input, textarea { font: inherit; color: inherit; }
   .ticker span { padding: 0 24px; font-size: 18px; }
   .hero__sub { font-size: 26px; }
   .hero__title { font-size: 72px; line-height: 1.25; }
-  .hero__dots { bottom: 150px; }
   .sec { padding: 160px 0; }
   .head { margin-bottom: 40px; }
   .head h2 { font-size: 52px; }
@@ -350,7 +345,6 @@ button, input, textarea { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .ticker__track { animation: none; }
-  .hero__slide { transition: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .header { background: var(--dark); -webkit-backdrop-filter: none; backdrop-filter: none; }

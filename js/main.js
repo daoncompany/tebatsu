@@ -1,17 +1,5 @@
-// 메인 슬라이드: 5초 자동 전환 + 점 클릭
-(() => {
-  const slides = document.querySelectorAll('.hero__slide');
-  const dots = document.querySelectorAll('.hero__dots button');
-  let cur = 0, timer;
-  const go = (i) => {
-    slides[cur].classList.remove('is-on'); dots[cur].classList.remove('is-on');
-    cur = i % slides.length;
-    slides[cur].classList.add('is-on'); dots[cur].classList.add('is-on');
-  };
-  const play = () => { clearInterval(timer); timer = setInterval(() => go(cur + 1), 5000); };
-  dots.forEach((d, i) => d.addEventListener('click', () => { go(i); play(); }));
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) play();
-})();
+// 메인 영상: 동작 줄이기 설정이면 멈추고 포스터만
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelector('.hero__video').pause();
 
 // 가맹 문의 폼: 필수값 확인 (전송 연동은 6단계 Apps Script 작업 때 추가)
 (() => {

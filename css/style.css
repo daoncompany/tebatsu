@@ -41,7 +41,9 @@ button, input, textarea { font: inherit; color: inherit; }
   -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%);
 }
 .header__in { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 var(--gutter); max-width: 1240px; margin: 0 auto; }
-.header__logo img { height: 36px; width: auto; }
+.logo { display: flex; align-items: center; gap: 6px; height: 36px; }
+.logo img { height: 100%; width: auto; }
+.header__logo .logo { height: 36px; }
 .header__nav { display: none; }
 .btn-red {
   display: inline-flex; align-items: center; justify-content: center;
@@ -85,7 +87,7 @@ button, input, textarea { font: inherit; color: inherit; }
 
 /* ── Brand ── */
 .brand { position: relative; padding: 90px 0; overflow: hidden; background: #d6d6d6; }
-.brand__bg { position: absolute; inset: 0; background: #d6d6d6; align-items: flex-end; padding-bottom: 20px; }
+.brand__bg { position: absolute; inset: 0; background: #d6d6d6 url(../images/brand-bg.jpg) center / cover no-repeat; }
 .brand__in { position: relative; }
 .brand .eyebrow { color: #6b4f22; }
 .brand__title { font-size: 28px; font-weight: 800; line-height: 1.35; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 36px; }
@@ -94,7 +96,7 @@ button, input, textarea { font: inherit; color: inherit; }
 /* ── Brand story ── */
 .story__grid { display: grid; gap: 12px; }
 .story__card { background: #080808; border-radius: var(--r); padding: 40px 20px 32px; text-align: center; }
-.story__kana { display: block; font-family: "Yuji Syuku", serif; font-size: 96px; line-height: 1.1; color: var(--gold); margin-bottom: 16px; }
+.story__kana { display: block; height: 84px; width: auto; margin: 0 auto 16px; }
 .story__card p { font-size: 15px; line-height: 1.5; }
 .story__desc { text-align: center; margin-top: 32px; font-size: 15px; line-height: 1.7; color: #ddd; }
 
@@ -216,7 +218,7 @@ button, input, textarea { font: inherit; color: inherit; }
 .footer { background: var(--dark-3); color: #aaa; font-size: 13px; line-height: 1.6; padding: 40px 0 24px; }
 .footer__in { display: grid; gap: 24px; }
 .footer__top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.footer__top img { height: 48px; width: auto; margin-right: 18px; }
+.footer__top .logo { height: 48px; margin-right: 18px; }
 .footer i { font-style: normal; margin: 0 4px; color: #888; }
 .sns { width: 40px; height: 40px; border: 1px solid var(--gold); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--gold); font-weight: 800; font-size: 14px; }
 .footer__copy { text-align: center; font-size: 12px; color: #808080; margin-top: 32px; padding: 0 var(--gutter); }
@@ -230,7 +232,7 @@ button, input, textarea { font: inherit; color: inherit; }
 @media (min-width: 768px) {
   :root { --gutter: 32px; }
   .pc { display: inline; }
-  .header__logo img { height: 42px; }
+  .header__logo .logo { height: 42px; }
   .hero__sub { font-size: 20px; }
   .hero__title { font-size: 48px; }
   .sec { padding: 110px 0; }
@@ -241,7 +243,7 @@ button, input, textarea { font: inherit; color: inherit; }
   .brand__title { font-size: 44px; }
   .brand__quote { font-size: 24px; }
   .story__grid { grid-template-columns: 1fr 1fr; gap: 20px; }
-  .story__kana { font-size: 130px; }
+  .story__kana { height: 112px; }
   .story__desc { font-size: 18px; }
   .winwin { grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
   .winwin__title { font-size: 40px; }
@@ -267,7 +269,7 @@ button, input, textarea { font: inherit; color: inherit; }
 @media (min-width: 1200px) {
   :root { --header-h: 150px; }
   .header__in { height: 90px; }
-  .header__logo img { height: 64px; }
+  .header__logo .logo { height: 64px; }
   .header__nav { display: flex; gap: 46px; margin-left: auto; margin-right: 100px; font-size: 17px; font-weight: 500; color: #eee; }
   .header__nav a { transition: color .2s; }
   .header__nav a:hover { color: var(--gold); }
@@ -286,7 +288,7 @@ button, input, textarea { font: inherit; color: inherit; }
   .brand__title { font-size: 56px; }
   .brand__quote { font-size: 32px; padding-left: 22px; }
   .story__card { padding: 50px 20px 60px; }
-  .story__kana { font-size: 170px; }
+  .story__kana { height: 146px; }
   .story__desc { font-size: 22px; }
   .points li { min-height: 280px; padding: 40px 30px; }
   .points b { font-size: 40px; margin-bottom: 30px; }
@@ -338,7 +340,7 @@ button, input, textarea { font: inherit; color: inherit; }
   .privacy strong { margin: 0; font-size: 19px; }
   .agree { font-size: 18px; }
   .footer { padding: 46px 0 50px; font-size: 15px; }
-  .footer__top img { height: 64px; }
+  .footer__top .logo { height: 64px; }
   .quick { right: 40px; bottom: 40px; gap: 16px; }
   .quick a { width: 64px; height: 64px; font-size: 14px; }
 }

@@ -69,6 +69,42 @@ button, input, textarea { font: inherit; color: inherit; letter-spacing: inherit
 .hero__title { font-size: 32px; font-weight: 700; }
 .hero__sub, .hero__title { animation: rise .9s cubic-bezier(.2,.7,.2,1) both; }
 .hero__title { animation-delay: .2s; }
+
+/* ── 히어로 쇼릴 오버랩: 1920×1080 무대를 16:9 그대로 히어로(헤더 아래)에 맞춤, 선·글자는 크림 ── */
+.hero.has-reel .hero__text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; padding: 0; }
+.reel { position: absolute; left: 0; right: 0; top: var(--header-h); bottom: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .5s; }
+.reel.is-ready { opacity: 1; }
+.reel__stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden; color: #f1f1f1; letter-spacing: 0; line-height: 1.5; }
+.reel .sc { position: absolute; inset: 0; display: none; color: #f1f1f1; }
+.reel .a { position: absolute; left: 0; top: 0; white-space: nowrap; will-change: transform, filter, opacity; }
+.reel .g { font-weight: 900; letter-spacing: -0.045em; line-height: .86; }
+.reel .s { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; line-height: 1; }
+.reel .m { font-family: "JetBrains Mono", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; font-size: 15px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.reel .kr { font-family: "Pretendard Variable", Pretendard, sans-serif; letter-spacing: -0.01em; text-transform: none; }
+.reel .mask { position: absolute; overflow: hidden; }
+.reel .hl { position: absolute; background: currentColor; }
+.reel .dot-h { position: absolute; height: 0; border-top: 1px dashed currentColor; }
+.reel .dot-v { position: absolute; width: 0; border-left: 1px dashed currentColor; }
+.reel .red { color: var(--red); }
+.reel .seal { position: absolute; background: var(--red); color: #f1f1f1; display: flex; align-items: center; justify-content: center; }
+.reel .brush path { fill: currentColor; }
+.reel svg.ov { position: absolute; left: 0; top: 0; overflow: visible; }
+.reel__edge { position: absolute; display: none; background: #f1f1f1; }
+.reel__hud { position: absolute; left: 0; right: 0; top: var(--header-h); bottom: 0; z-index: 2; pointer-events: none; color: #f1f1f1; opacity: 0; transition: opacity .5s;
+  font: 400 10px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.hero.has-reel .reel__hud { opacity: 1; }
+.reel__hud .crop { position: absolute; width: 28px; height: 28px; }
+.reel__hud .crop::before, .reel__hud .crop::after { content: ""; position: absolute; left: 0; top: 0; background: currentColor; }
+.reel__hud .crop::before { width: 100%; height: 1px; } .reel__hud .crop::after { width: 1px; height: 100%; }
+.reel__hud .tl { left: 14px; top: 14px; } .reel__hud .tr { right: 14px; top: 14px; transform: scaleX(-1); }
+.reel__hud .bl { left: 14px; bottom: 14px; transform: scaleY(-1); } .reel__hud .br { right: 14px; bottom: 14px; transform: scale(-1); }
+.reel__hud span { position: absolute; }
+.reel__brand { left: 52px; top: 24px; } .reel__sc { right: 52px; top: 24px; }
+.reel__tc { left: 52px; bottom: 24px; } .reel__spec { right: 52px; bottom: 24px; }
+.reel__bar { position: absolute; left: 52px; right: 52px; bottom: 46px; height: 7px; }
+.reel__bar::before { content: ""; position: absolute; left: 0; right: 0; top: 3px; height: 1px; background: currentColor; }
+.reel__fill { position: absolute; left: 0; right: 0; top: 2px; height: 3px; background: currentColor; transform: scaleX(0); transform-origin: 0 0; }
+.reel__ticks i { position: absolute; top: 0; width: 1px; height: 7px; background: currentColor; }
 @keyframes rise { from { opacity: 0; transform: translateY(30px); } }
 
 /* ── Section commons ── */
@@ -184,9 +220,8 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 /* ── Steps ── */
 .sec--steps { overflow: hidden; }
 .sec--steps > .wrap { position: relative; z-index: 1; }
-.sec--steps::before, .sec--steps::after { content: ""; position: absolute; opacity: .09; background: center / contain no-repeat; pointer-events: none; }
-.sec--steps::before { width: min(90vw, 980px); aspect-ratio: 1000 / 761; right: -18%; bottom: -14%; background-image: url(../images/menu/tonkotsu-ramen.webp); transform: rotate(-12deg); }
-.sec--steps::after { width: min(60vw, 640px); aspect-ratio: 800 / 598; left: -16%; top: -6%; background-image: url(../images/menu/gyu-ramen.webp); transform: rotate(14deg); }
+.sec--steps::before { content: ""; position: absolute; width: 140vw; aspect-ratio: 1400 / 1138; left: 20%; top: 36%; opacity: .1; background: url(../images/menu/sake-don-bg.webp) center / contain no-repeat; pointer-events: none; }
+@media (min-width: 1200px) { .sec--steps::before { width: 72vw; left: 38%; top: 28%; } }
 .steps li { background: #fff; border: 2px solid transparent; border-radius: var(--r); padding: 26px 24px; transition: border-color .25s, opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
 .steps li:hover { border-color: var(--gold); }
 .steps span { color: var(--gold); font-size: 14px; font-weight: 700; }
@@ -312,6 +347,12 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
   .hero__sub { font-size: 28px; margin-bottom: 54px; }
   .hero__title { font-size: 76px; }
   .hero__text { padding-bottom: 300px; }
+  .reel__hud { font-size: 12px; }
+  .reel__hud .crop { width: 44px; height: 44px; }
+  .reel__hud .tl { left: 32px; top: 24px; } .reel__hud .tr { right: 32px; top: 24px; } .reel__hud .bl { left: 32px; bottom: 32px; } .reel__hud .br { right: 32px; bottom: 32px; }
+  .reel__brand { left: 92px; top: 34px; } .reel__sc { right: 92px; top: 34px; }
+  .reel__tc { left: 92px; bottom: 42px; } .reel__spec { right: 92px; bottom: 42px; }
+  .reel__bar { left: 420px; right: 420px; bottom: 44px; }
   .sec { padding: 165px 0; }
   .story { padding: 224px 0; }
   .sec--points { padding: 190px 0; }

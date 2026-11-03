@@ -186,9 +186,8 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 /* ── Steps ── */
 .sec--steps { overflow: hidden; }
 .sec--steps > .wrap { position: relative; z-index: 1; }
-.sec--steps::before, .sec--steps::after { content: ""; position: absolute; opacity: .09; background: center / contain no-repeat; pointer-events: none; }
-.sec--steps::before { width: min(90vw, 980px); aspect-ratio: 1000 / 761; right: -18%; bottom: -14%; background-image: url(../images/menu/tonkotsu-ramen.webp); transform: rotate(-12deg); }
-.sec--steps::after { width: min(60vw, 640px); aspect-ratio: 800 / 598; left: -16%; top: -6%; background-image: url(../images/menu/gyu-ramen.webp); transform: rotate(14deg); }
+.sec--steps::before { content: ""; position: absolute; width: 140vw; aspect-ratio: 1400 / 1138; left: 20%; top: 36%; opacity: .1; background: url(../images/menu/sake-don-bg.webp) center / contain no-repeat; pointer-events: none; }
+@media (min-width: 1200px) { .sec--steps::before { width: 72vw; left: 38%; top: 28%; } }
 .steps li { background: #fff; border: 2px solid transparent; border-radius: var(--r); padding: 26px 24px; transition: border-color .25s, opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
 .steps li:hover { border-color: var(--gold); }
 .steps span { color: var(--gold); font-size: 14px; font-weight: 700; }

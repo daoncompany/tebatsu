@@ -13,14 +13,18 @@ if (reduce) document.querySelector('.hero__video').pause();
 if (!reduce) {
   // 섹션 공통: 제목·카드 스크롤 진입 시 페이드업, 카드는 0.1초 간격
   const groups = ['.head', '.brand__in', '.story__card', '.points li', '.winwin > *', '.special__title', '.special li',
-    '.sales__card', '.check__title', '.check li', '.cost > div', '.cases li', '.steps li', '.support li', '.news li', '.form'];
+    '.sales__card', '.check__title', '.check li', '.cost > div', '.cases li', '.steps li', '.support li', '.news li', '.form', '.sticker'];
+  // 스티커는 시작 위치가 화면 밖이라 직접 감지가 안 됨 → 붙어 있는 섹션이 들어올 때 함께 등장
+  const targets = new Map();
   const io = new IntersectionObserver((es) => es.forEach((e) => {
-    if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    if (e.isIntersecting) { targets.get(e.target).forEach((el) => el.classList.add('is-in')); io.unobserve(e.target); }
   }), { rootMargin: '0px 0px -10% 0px' });
   groups.forEach((sel) => document.querySelectorAll(sel).forEach((el) => {
     el.classList.add('reveal');
     el.style.transitionDelay = [...el.parentNode.children].filter((c) => c.matches(sel)).indexOf(el) * 0.1 + 's';
-    io.observe(el);
+    const t = sel === '.sticker' ? el.parentNode : el;
+    if (!targets.has(t)) { targets.set(t, []); io.observe(t); }
+    targets.get(t).push(el);
   }));
   // 창업절차 카드는 hover 테두리가 바로 반응하도록 등장 후 지연 제거
   document.querySelectorAll('.steps li').forEach((el) => el.addEventListener('transitionend', () => { el.style.transitionDelay = ''; }, { once: true }));

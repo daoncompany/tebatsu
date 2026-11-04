@@ -13,7 +13,7 @@ if (reduce) document.querySelector('.hero__video').pause();
 if (!reduce) {
   // 섹션 공통: 제목·카드 스크롤 진입 시 페이드업, 카드는 0.1초 간격
   const groups = ['.head', '.brand__in', '.story__card', '.points li', '.winwin > *', '.special__title', '.special li',
-    '.sales__card', '.check__title', '.check li', '.cost > div', '.cases li', '.steps li', '.support li', '.news li', '.form', '.sticker'];
+    '.sales__card', '.check__title', '.check li', '.cost > div', '.cases li', '.steps li', '.support li', '.board', '.form', '.sticker'];
   // 스티커는 시작 위치가 화면 밖이라 직접 감지가 안 됨 → 붙어 있는 섹션이 들어올 때 함께 등장
   const targets = new Map();
   const io = new IntersectionObserver((es) => es.forEach((e) => {
@@ -58,11 +58,69 @@ if (!reduce) {
   para();
 }
 
-// 가맹 문의 폼: 필수값 확인 (전송 연동은 6단계 Apps Script 작업 때 추가)
+// 커뮤니티 게시판: 제목을 누르면 같은 섹션에서 본문, '목록 보기'로 복귀
+(() => {
+  const board = document.querySelector('.board');
+  const rows = board.querySelector('.board__rows');
+  const pager = board.querySelector('.board__pager');
+  const view = board.querySelector('.board__view');
+  const list = board.querySelector('.board__list');
+  const PER = 10;
+  let posts = [], page = 1;
+
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const note = (text) => { rows.replaceChildren(el('li', 'board__empty', text)); pager.replaceChildren(); };
+
+  const renderList = () => {
+    if (!posts.length) return note('등록된 게시물이 없습니다.');
+    const pages = Math.ceil(posts.length / PER);
+    page = Math.min(page, pages);
+    rows.replaceChildren(...posts.slice((page - 1) * PER, page * PER).map((p) => {
+      const li = el('li', 'board__row');
+      const btn = el('button', 'board__title', p.title);
+      btn.type = 'button';
+      btn.addEventListener('click', () => open(p));
+      li.append(el('span', 'board__tag' + (p.tag === '공지' ? ' is-notice' : ''), p.tag), btn, el('time', 'board__date', p.date));
+      return li;
+    }));
+    pager.replaceChildren();
+    if (pages > 1) for (let i = 1; i <= pages; i++) {
+      const b = el('button', 'board__page', String(i));
+      b.type = 'button';
+      if (i === page) b.setAttribute('aria-current', 'page');
+      b.addEventListener('click', () => { page = i; renderList(); });
+      pager.append(b);
+    }
+  };
+
+  const top = () => board.closest('section').scrollIntoView({ block: 'start' });
+  const open = (p) => {
+    view.querySelector('.board__tag').textContent = p.tag;
+    view.querySelector('.board__tag').classList.toggle('is-notice', p.tag === '공지');
+    view.querySelector('h3').textContent = p.title;
+    view.querySelector('time').textContent = p.date;
+    view.querySelector('.board__body').textContent = p.body;
+    list.hidden = true; view.hidden = false;
+    top();
+    view.querySelector('h3').focus({ preventScroll: true });
+  };
+  view.querySelector('.board__back').addEventListener('click', () => {
+    view.hidden = true; list.hidden = false;
+    top();
+    rows.querySelector('button')?.focus({ preventScroll: true });
+  });
+
+  api.posts()
+    .then((out) => { posts = out.posts || []; renderList(); })
+    .catch(() => note('게시물을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'));
+})();
+
+// 가맹 문의 폼: 필수값 확인 후 웹앱으로 전송
 (() => {
   const form = document.getElementById('franchiseForm');
   const msg = form.querySelector('.form__msg');
-  form.addEventListener('submit', (e) => {
+  const btn = form.querySelector('.form__submit');
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const bad = [...form.querySelectorAll('[required]')].find((el) => !el.checkValidity());
     if (bad) {
@@ -70,6 +128,18 @@ if (!reduce) {
       bad.focus();
       return;
     }
-    msg.textContent = '문의 전송은 폼 연동 후 동작합니다.';
+    const data = Object.fromEntries(new FormData(form));
+    delete data.agree;
+    btn.disabled = true;
+    msg.textContent = '전송 중입니다…';
+    try {
+      await api.send('inquiry', data);
+      form.reset();
+      msg.textContent = '문의가 접수되었습니다. 빠르게 연락드리겠습니다.';
+    } catch {
+      msg.textContent = '전송에 실패했습니다. 잠시 후 다시 시도하시거나 010-5419-0401로 연락해 주세요.';
+    } finally {
+      btn.disabled = false;
+    }
   });
 })();

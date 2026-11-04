@@ -60,12 +60,64 @@ function contact(p) {
   // 메일은 잠금 밖에서. 실패해도 시트 저장은 끝났으니 접수 성공으로 응답
   try {
     const to = prop('MAIL_TO') || MAIL_TO_DEFAULT;
-    const body = CONTACT_HEAD.map((h, i) => `${h}: ${row[i] || '-'}`).join('\n') + '\n\n시트: ' + ss.getUrl();
-    MailApp.sendEmail({ to, subject: `[테바츠 가맹문의] ${row[1]} / ${row[3]}`, body, replyTo: isMail(row[4]) ? row[4] : undefined });
+    MailApp.sendEmail({
+      to,
+      subject: `[테바츠 가맹문의] ${row[1]}님 · ${row[5] || '지역 미입력'}`,
+      body: CONTACT_HEAD.map((h, i) => `${h}: ${row[i] || '-'}`).join('\n'),   // HTML을 못 보는 메일앱용
+      htmlBody: mailHtml(row),
+      name: '테바츠 홈페이지',
+      replyTo: isMail(row[4]) ? row[4] : undefined,
+    });
   } catch (x) {
     console.error('메일 발송 실패', x);
   }
   return { ok: true };
+}
+
+/* ── 문의 알림 메일 (메일앱 호환을 위해 표 + 인라인 스타일) ── */
+function mailHtml(row) {
+  const [at, name, callTime, phone, email, region, message, utm] = row.map(esc);
+  const tel = String(row[3]).replace(/[^0-9+]/g, '');
+  const link = (href, text) => `<a href="${href}" style="color:#b32a2d;text-decoration:none;font-weight:700;">${text}</a>`;
+  const line = (label, value) => `
+        <tr>
+          <td style="padding:14px 0;border-bottom:1px solid #eee;width:110px;color:#888;font-size:13px;vertical-align:top;">${label}</td>
+          <td style="padding:14px 0;border-bottom:1px solid #eee;color:#1f1f1f;font-size:15px;">${value || '<span style="color:#bbb;">-</span>'}</td>
+        </tr>`;
+  const btn = (href, text, bg, fg) => `<a href="${href}" style="display:inline-block;padding:12px 22px;margin:0 6px 8px 0;border-radius:999px;background:${bg};color:${fg};font-size:14px;font-weight:700;text-decoration:none;">${text}</a>`;
+  return `
+<div style="margin:0;padding:24px 12px;background:#f1f1f1;font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;border-collapse:separate;">
+    <tr><td style="background:#1f1f1f;padding:26px 28px;">
+      <div style="color:#ccac78;font-size:12px;font-weight:700;letter-spacing:2px;">TEBATSU · 가맹 문의</div>
+      <div style="color:#fff;font-size:22px;font-weight:700;margin-top:8px;word-break:keep-all;">${name}님의 새 문의가 도착했습니다</div>
+      <div style="color:#aaa;font-size:13px;margin-top:6px;">${at} 접수</div>
+    </td></tr>
+    <tr><td style="padding:22px 28px 4px;">
+      ${btn('tel:' + tel, '📞 전화하기 ' + phone, '#b32a2d', '#fff')}
+      ${isMail(row[4]) ? btn('mailto:' + encodeURIComponent(row[4]), '✉ 메일 답장', '#f1f1f1', '#1f1f1f') : ''}
+    </td></tr>
+    <tr><td style="padding:6px 28px 8px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+        ${line('이름', `<b>${name}</b>`)}
+        ${line('연락처', link('tel:' + tel, phone))}
+        ${line('연락 가능 시간', callTime)}
+        ${line('이메일', isMail(row[4]) ? link('mailto:' + encodeURIComponent(row[4]), email) : email)}
+        ${line('희망 창업 지역', region)}
+      </table>
+    </td></tr>
+    <tr><td style="padding:14px 28px 26px;">
+      <div style="color:#888;font-size:13px;margin-bottom:8px;">문의 내용</div>
+      <div style="background:#f7f5f1;border-left:4px solid #ccac78;border-radius:8px;padding:16px 18px;color:#1f1f1f;font-size:15px;line-height:1.7;white-space:pre-wrap;word-break:break-word;">${message}</div>
+    </td></tr>
+    <tr><td style="background:#fafafa;border-top:1px solid #eee;padding:14px 28px;color:#999;font-size:12px;">
+      유입 경로: ${utm || '직접 방문'}<br>테바츠 홈페이지 가맹 문의 폼에서 자동 발송된 메일입니다.
+    </td></tr>
+  </table>
+</div>`;
+}
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 /* ── 소식 게시판 ── */

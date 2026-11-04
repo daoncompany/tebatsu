@@ -7,7 +7,7 @@
     set: (v) => { try { sessionStorage.setItem(KEY, v); } catch {} },
     clear: () => { try { sessionStorage.removeItem(KEY); } catch {} },
   };
-  let password = store.get();
+  let key = store.get();
 
   const $ = (s) => document.querySelector(s);
   const loginForm = $('#loginForm'), writeForm = $('#writeForm'), panel = $('.panel'), logout = $('.staff__logout');
@@ -19,11 +19,11 @@
     if (on) load(); else loginForm.password.focus();
   };
   const kick = (text) => {
-    password = null; store.clear(); show(false);
+    key = null; store.clear(); show(false);
     say(loginForm.querySelector('.msg'), text || '다시 로그인해 주세요.');
   };
   const failed = (err, el) => {
-    if (err.code === 'auth') return kick('비밀번호가 바뀌었거나 맞지 않습니다. 다시 로그인해 주세요.');
+    if (err.code === 'denied' || err.code === 'locked') return kick('비밀번호가 바뀌었거나 맞지 않습니다. 다시 로그인해 주세요.');
     say(el, err.message && !/^HTTP|fetch/i.test(err.message) ? err.message : '서버와 통신하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   };
 
@@ -34,11 +34,11 @@
     if (!pw) return say(msg, '비밀번호를 입력해 주세요.');
     btn.disabled = true; say(msg, '확인 중…', true);
     try {
-      await api.send('login', { password: pw });
-      password = pw; store.set(pw); loginForm.reset(); say(msg, '');
+      await api.send('login', { key: pw });
+      key = pw; store.set(pw); loginForm.reset(); say(msg, '');
       show(true);
     } catch (err) {
-      say(msg, err.code === 'auth' || err.code === 'locked' ? err.message : '서버와 통신하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      say(msg, err.code === 'denied' || err.code === 'locked' ? err.message : '서버와 통신하지 못했습니다. 잠시 후 다시 시도해 주세요.');
       loginForm.password.select();
     } finally { btn.disabled = false; }
   });
@@ -54,7 +54,7 @@
     if (!data.body) { writeForm.body.focus(); return say(msg, '본문을 입력해 주세요.'); }
     btn.disabled = true; say(msg, '등록 중…', true);
     try {
-      await api.send('create', { password, ...data });
+      await api.send('post', { key, ...data });
       writeForm.reset(); say(msg, '등록되었습니다.', true);
       load();
     } catch (err) { failed(err, msg); } finally { btn.disabled = false; }
@@ -71,7 +71,7 @@
       list.replaceChildren(...posts.map((p) => {
         const li = el('li');
         const meta = el('span', 'slist__meta');
-        meta.append(el('b', '', p.tag), p.date);
+        meta.append(el('b', '', p.cat), p.date);
         const del = el('button', 'slist__del', '삭제');
         del.type = 'button';
         del.addEventListener('click', () => remove(p, del));
@@ -85,12 +85,12 @@
     if (!confirm(`‘${p.title}’ 게시물을 삭제할까요?\n삭제하면 되돌릴 수 없습니다.`)) return;
     btn.disabled = true; say(listMsg, '삭제 중…', true);
     try {
-      await api.send('delete', { password, id: p.id });
+      await api.send('delete', { key, id: p.id });
       say(listMsg, '삭제되었습니다.', true);
       load();
     } catch (err) { btn.disabled = false; failed(err, listMsg); }
   }
 
   $('#reload').addEventListener('click', load);
-  show(!!password);
+  show(!!key);
 })();

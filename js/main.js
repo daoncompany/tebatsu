@@ -80,7 +80,7 @@ if (!reduce) {
       const btn = el('button', 'board__title', p.title);
       btn.type = 'button';
       btn.addEventListener('click', () => open(p));
-      li.append(el('span', 'board__tag' + (p.tag === '공지' ? ' is-notice' : ''), p.tag), btn, el('time', 'board__date', p.date));
+      li.append(el('span', 'board__tag' + (p.cat === '공지' ? ' is-notice' : ''), p.cat), btn, el('time', 'board__date', p.date));
       return li;
     }));
     pager.replaceChildren();
@@ -95,8 +95,8 @@ if (!reduce) {
 
   const top = () => board.closest('section').scrollIntoView({ block: 'start' });
   const open = (p) => {
-    view.querySelector('.board__tag').textContent = p.tag;
-    view.querySelector('.board__tag').classList.toggle('is-notice', p.tag === '공지');
+    view.querySelector('.board__tag').textContent = p.cat;
+    view.querySelector('.board__tag').classList.toggle('is-notice', p.cat === '공지');
     view.querySelector('h3').textContent = p.title;
     view.querySelector('time').textContent = p.date;
     view.querySelector('.board__body').textContent = p.body;
@@ -117,6 +117,13 @@ if (!reduce) {
 
 // 가맹 문의 폼: 필수값 확인 후 웹앱으로 전송
 (() => {
+  // 유입 경로: 처음 들어온 주소의 utm_* 값을 탭이 열려 있는 동안 기억 → 시트 '유입(UTM)' 칸
+  const UTM = 'tebatsu-utm';
+  const fromUrl = [...new URLSearchParams(location.search)].filter(([k]) => k.startsWith('utm_')).map(([k, v]) => `${k.slice(4)}=${v}`).join(' ');
+  let utm = '';
+  try { if (fromUrl && !sessionStorage.getItem(UTM)) sessionStorage.setItem(UTM, fromUrl); utm = sessionStorage.getItem(UTM) || ''; } catch { utm = fromUrl; }
+  if (!utm && document.referrer && !document.referrer.startsWith(location.origin)) utm = 'ref=' + new URL(document.referrer).hostname;
+
   const form = document.getElementById('franchiseForm');
   const msg = form.querySelector('.form__msg');
   const btn = form.querySelector('.form__submit');
@@ -130,10 +137,11 @@ if (!reduce) {
     }
     const data = Object.fromEntries(new FormData(form));
     delete data.agree;
+    data.utm = utm;
     btn.disabled = true;
     msg.textContent = '전송 중입니다…';
     try {
-      await api.send('inquiry', data);
+      await api.send('contact', data);
       form.reset();
       msg.textContent = '문의가 접수되었습니다. 빠르게 연락드리겠습니다.';
     } catch {

@@ -8,7 +8,7 @@ const api = {
     const res = await fetch(API_URL + '?action=posts', { cache: 'no-store' });
     return api._read(res);
   },
-  // 문의 전송 · 스텝 로그인/글쓰기/삭제
+  // 문의(contact) · 스텝 로그인(login) / 글쓰기(post) / 삭제(delete)
   // text/plain 으로 보내야 CORS 사전요청 없이 Apps Script 에 닿음
   async send(action, data) {
     const res = await fetch(API_URL, {

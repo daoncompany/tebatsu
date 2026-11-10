@@ -186,7 +186,7 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 .sales__big small { font-size: 1em; }
 .sales__split { font-size: 17px; font-weight: 600; padding-bottom: 22px; border-bottom: 1px solid #e5e5e5; }
 .sales__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 22px 0 18px; }
-.sales__stats li { background: #f7f3ec; border-radius: 12px; padding: 16px 10px; display: flex; flex-direction: column; }
+.sales__stats li { background: #f7f3ec; border-radius: 12px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .sales__stats li b { margin-top: auto; padding-top: 10px; }
 .sales__stats span { display: block; font-size: 12px; font-weight: 500; color: #888; }
 .sales__stats b { display: block; font-size: 17px; font-weight: 700; margin-top: 10px; white-space: nowrap; }
@@ -422,13 +422,13 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
   .sales__big { font-size: 72px; margin: 8px 0 29px; }
   .sales__split { font-size: 20px; padding-bottom: 25px; }
   .sales__stats { gap: 10px; margin: 25px 0; }
-  .sales__stats li { padding: 24px 20px 24px 40px; min-height: 110px; }
+  .sales__stats li { padding: 24px 16px; min-height: 110px; }
   .sales__stats span { font-size: 14px; }
   .sales__stats b { font-size: 26px; margin-top: 13px; }
   .sales__note { font-size: 15px; }
   .check__title { font-size: 24px; margin: 47px 0 24px; }
   .check { gap: 20px; grid-template-columns: repeat(4, 1fr); }
-  .check li { font-size: 20px; padding: 24px 30px; min-height: 120px; }
+  .check li { font-size: 20px; padding: 24px; min-height: 120px; }
   .cost__name { font-size: 28px; }
   .cost__desc { font-size: 15px; margin: 12px 0 27px; }
   .cost__box { padding: 24px 20px 20px; }
@@ -467,10 +467,12 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
   .field textarea { min-height: 248px; }
   .field--full { align-items: start; }
   .field--full span { padding-top: 12px; }
-  .privacy { display: flex; align-items: center; gap: 36px; padding: 24px 34px; margin-top: 30px; font-size: 15px; }
+  /* 내용칸(라벨 150px + 간격 40px 오른쪽)과 같은 너비 */
+  .privacy, .agree { margin-left: 190px; }
+  .privacy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px; padding: 24px 34px; margin-top: 30px; font-size: 15px; }
   .privacy p + p { margin-top: 0; }
   .privacy strong, .privacy p { white-space: nowrap; }
-  .privacy strong { margin: 0; font-size: 20px; }
+  .privacy strong { margin: 0 0 4px; font-size: 20px; flex-basis: 100%; }
   .agree { font-size: 18px; }
   .footer { padding: 46px 0 50px; font-size: 15px; }
   .footer__in { grid-template-columns: auto auto; justify-content: start; column-gap: 312px; align-items: end; }
@@ -498,3 +500,5 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
   .cost > div { display: flex; flex-direction: column; }
   .cost__box { flex: 1; min-height: 0; }
 }
+/* 가격 이원화 예시: 카드 폭 안에서 한 줄 */
+.check__ex { display: block; white-space: nowrap; font-size: 12px; letter-spacing: -0.04em; margin-top: 2px; }

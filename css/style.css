@@ -508,24 +508,20 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 .support__img--logo img { width: 30%; max-width: 110px; height: auto; }
 
 /* ── 테바츠의 메뉴: 오른쪽→왼쪽 자동 롤링 ── */
-.menu__roll { overflow: hidden; padding: 12px 0 8px; }
-.menu__track { display: flex; width: max-content; animation: menu-roll 90s linear infinite; }
-.menu__roll:hover .menu__track, .menu__roll:focus-within .menu__track { animation-play-state: paused; }
+.menu__roll { overflow: hidden; padding: 12px 0 8px; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.menu__roll.is-drag { cursor: grabbing; }
+/* 위치는 js/main.js 가 움직임(자동 흐름 + 끌기) */
+.menu__track { display: flex; width: max-content; will-change: transform; }
 .menu__list { display: flex; gap: 16px; padding-right: 16px; }
 .menu__list li { width: 150px; text-align: center; }
-.menu__list img { width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--r); transition: transform .3s ease; }
-.menu__list li:hover img { transform: scale(1.06); }
+.menu__list img { width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--r); transition: transform .3s ease; pointer-events: none; }
+.menu__list li:hover img, .menu__roll:not(.is-drag) .menu__list li:hover img { transform: scale(1.06); }
+.menu__roll.is-drag .menu__list li:hover img { transform: none; }
 .menu__list span { display: block; margin-top: 12px; font-size: 14px; font-weight: 600; line-height: 1.4; }
-@keyframes menu-roll { to { transform: translateX(-50%); } }
 @media (min-width: 768px) {
   .menu__list { gap: 24px; padding-right: 24px; }
   .menu__list li { width: 210px; }
   .menu__list span { font-size: 17px; margin-top: 16px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .menu__roll { overflow-x: auto; }
-  .menu__track { animation: none; }
-  .menu__list[aria-hidden] { display: none; }
 }
 
 /* ── 테바츠의 식구: 지점 카드 ── */
@@ -543,4 +539,12 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
   .family__body { padding: 40px 48px; }
   .family__body h3 { font-size: 28px; margin-bottom: 24px; }
   .family__body dl > div { grid-template-columns: 80px 1fr; font-size: 17px; padding: 16px 0; }
+}
+
+/* ── 대표 인사말 친필 사인: 카드 오른쪽 아래로 살짝 넘어가게 ── */
+.letter { position: relative; }
+.letter__sign { position: absolute; right: -12px; bottom: -28px; width: 150px; height: 75px; object-fit: contain; pointer-events: none; }
+.letter__sign--ph { border: 2px dashed var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--gold); background: rgba(31,31,31,.6); }
+@media (min-width: 1200px) {
+  .letter__sign { right: -40px; bottom: -44px; width: 240px; height: 120px; }
 }

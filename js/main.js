@@ -151,3 +151,46 @@ if (!reduce) {
     }
   });
 })();
+
+// 테바츠의 메뉴: 오른쪽→왼쪽 자동 흐름 + 마우스/손가락으로 끌면 끈 만큼 이동
+(() => {
+  const roll = document.querySelector('.menu__roll');
+  const track = roll && roll.querySelector('.menu__track');
+  if (!track) return;
+  const SPEED = 80; // 자동 흐름 속도(px/초)
+  const auto = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let x = 0, half = 0, last = 0, hover = false, drag = null;
+  const measure = () => { half = track.scrollWidth / 2; };
+  const wrap = () => { if (half) x = ((x % half) - half) % half; }; // 항상 -half ~ 0
+  const frame = (t) => {
+    const dt = last ? Math.min(t - last, 100) / 1000 : 0;
+    last = t;
+    if (auto && !hover && !drag && roll.dataset.visible !== '0') x -= SPEED * dt;
+    wrap();
+    track.style.transform = `translate3d(${x}px,0,0)`;
+    requestAnimationFrame(frame);
+  };
+  roll.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover = true; });
+  roll.addEventListener('pointerleave', () => { hover = false; });
+  roll.addEventListener('pointerdown', (e) => {
+    drag = { id: e.pointerId, sx: e.clientX, x0: x };
+    roll.setPointerCapture(e.pointerId);
+    roll.classList.add('is-drag');
+  });
+  roll.addEventListener('pointermove', (e) => {
+    if (drag && e.pointerId === drag.id) x = drag.x0 + (e.clientX - drag.sx);
+  });
+  const end = (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    drag = null;
+    roll.classList.remove('is-drag');
+  };
+  roll.addEventListener('pointerup', end);
+  roll.addEventListener('pointercancel', end);
+  // 화면 밖에 있을 땐 자동 흐름 멈춤
+  new IntersectionObserver(([en]) => { roll.dataset.visible = en.isIntersecting ? '1' : '0'; }).observe(roll);
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+  measure();
+  requestAnimationFrame(frame);
+})();

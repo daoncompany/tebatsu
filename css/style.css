@@ -526,7 +526,7 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 
 /* ── 테바츠의 식구: 지점 카드 ── */
 .family { display: grid; gap: 20px; max-width: 960px; margin: 0 auto; }
-.family__card { background: var(--dark-2); border-radius: var(--r); overflow: hidden; display: grid; }
+.family__card { color: #fff; background: var(--dark-2); border-radius: var(--r); overflow: hidden; display: grid; }
 .family__img { width: 100%; height: 320px; object-fit: cover; object-position: 50% 0; }
 .family__body { padding: 28px 24px 32px; }
 .family__body h3 { font-size: 22px; font-weight: 700; color: var(--gold); margin-bottom: 18px; }
@@ -548,3 +548,5 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 @media (min-width: 1200px) {
   .letter__sign { right: -40px; bottom: -44px; width: 240px; height: 120px; }
 }
+/* 같은 밝은 배경이 이어지는 지점 소개 → 소식: 사이 여백이 두 배로 벌어지지 않게 */
+#family + #community { padding-top: 0; }

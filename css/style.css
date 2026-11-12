@@ -502,3 +502,45 @@ main { overflow-x: clip; } /* 화면 밖으로 걸친 스티커가 가로 스크
 }
 /* 가격 이원화 예시: 카드 폭 안에서 한 줄 */
 .check__ex { display: block; white-space: nowrap; font-size: 12px; letter-spacing: -0.04em; margin-top: 2px; }
+
+/* ── 운영지원: 이미지 대신 로고 ── */
+.support__img--logo { background: #333; display: flex; align-items: center; justify-content: center; }
+.support__img--logo img { width: 30%; max-width: 110px; height: auto; }
+
+/* ── 테바츠의 메뉴: 오른쪽→왼쪽 자동 롤링 ── */
+.menu__roll { overflow: hidden; padding: 12px 0 8px; }
+.menu__track { display: flex; width: max-content; animation: menu-roll 90s linear infinite; }
+.menu__roll:hover .menu__track, .menu__roll:focus-within .menu__track { animation-play-state: paused; }
+.menu__list { display: flex; gap: 16px; padding-right: 16px; }
+.menu__list li { width: 150px; text-align: center; }
+.menu__list img { width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--r); transition: transform .3s ease; }
+.menu__list li:hover img { transform: scale(1.06); }
+.menu__list span { display: block; margin-top: 12px; font-size: 14px; font-weight: 600; line-height: 1.4; }
+@keyframes menu-roll { to { transform: translateX(-50%); } }
+@media (min-width: 768px) {
+  .menu__list { gap: 24px; padding-right: 24px; }
+  .menu__list li { width: 210px; }
+  .menu__list span { font-size: 17px; margin-top: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu__roll { overflow-x: auto; }
+  .menu__track { animation: none; }
+  .menu__list[aria-hidden] { display: none; }
+}
+
+/* ── 테바츠의 식구: 지점 카드 ── */
+.family { display: grid; gap: 20px; max-width: 960px; margin: 0 auto; }
+.family__card { background: var(--dark-2); border-radius: var(--r); overflow: hidden; display: grid; }
+.family__img { width: 100%; height: 320px; object-fit: cover; object-position: 50% 0; }
+.family__body { padding: 28px 24px 32px; }
+.family__body h3 { font-size: 22px; font-weight: 700; color: var(--gold); margin-bottom: 18px; }
+.family__body dl > div { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid #3a3a3a; font-size: 15px; line-height: 1.5; }
+.family__body dt { color: #aaa; }
+.family__body a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 768px) {
+  .family__card { grid-template-columns: 2fr 3fr; align-items: center; }
+  .family__img { height: 100%; min-height: 360px; }
+  .family__body { padding: 40px 48px; }
+  .family__body h3 { font-size: 28px; margin-bottom: 24px; }
+  .family__body dl > div { grid-template-columns: 80px 1fr; font-size: 17px; padding: 16px 0; }
+}
